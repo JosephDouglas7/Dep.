@@ -1,0 +1,647 @@
+#include<stdio.h> 
+#include<stdlib.h> 
+#include "util.h" 
+#include<unistd.h> 
+#include<string.h> 
+#include"nome.h"
+#include"Pagamento.h" 
+#include"P_a.h" 
+#include"cadastrar_aluno.h"
+#include"Saldo_atual.h" 
+#include"Data_de_nascimento.h"
+#include"relatorio.h"
+
+ 
+typedef struct Aluno {
+  char nome[100];
+  char data_nascimento[11];
+  char celular[15];
+}; 
+
+ typedef struct {  // Definir o tipo de dados 'Pagamento'
+     char data_pagamento[100];
+     float valor;
+ } Pagamento;
+
+char menu_principal(void);
+char tela_menu_principal(void); 
+char moduloAluno1(void);
+char aluno(void); 
+char cadastrar_aluno(void);  
+char tela_pesquisar_aluno(void);  
+char tela_Alterar_Aluno(void);
+char tela_Excluir_Aluno(void); 
+void tela_sobre(void); 
+void tela_equipe(void);  
+char funcao_tela_relatorios(void);
+char tela_relatorios(void); 
+char tela_relatorios2(void); 
+char resp_relat2(void); 
+char resp_relat3(void); 
+char resp_relat4(void);  
+char relatorio_atualizado(void); 
+char exibir_resultado_relatorio2(void);
+char avisos_da_semana(void);  
+char despesas(void); 
+char saldo_atual(void); 
+char adicionar_pagamento(void); 
+char pagamentos_atuais(void);  
+
+
+
+int main(void){   
+ 
+ menu_principal(); 
+ moduloAluno(); 
+ aluno();
+ cadastrar_aluno();
+ tela_menu_principal();  
+ cadastrar_aluno();  
+ tela_pesquisar_aluno();  
+ tela_Alterar_Aluno();
+ tela_Excluir_Aluno(); 
+ tela_sobre(); 
+ tela_equipe(); 
+ tela_relatorios(); 
+ tela_relatorios2(); 
+ resp_relat2(); 
+ resp_relat3(); 
+ resp_relat4(); 
+ relatorio_atualizado(); 
+ exibir_resultado_relatorio2();
+ avisos_da_semana();  
+ despesas(); 
+ saldo_atual(); 
+ adicionar_pagamento(); 
+ pagamentos_atuais(); 
+ return 0; 
+} 
+
+
+
+//feito com a ajuda do Chat GPT
+void pausa() {
+    sleep(60); // Pausa por 1 minuto
+}
+
+
+
+char menu_principal(void){  
+  char op;  
+  do{
+     op = tela_menu_principal();
+    switch(op){ 
+      case '1': 
+        moduloAluno(); 
+        pausa();
+        break; 
+      case '2':  
+        tela_sobre(); 
+        pausa();
+        break;  
+      case '3': 
+       tela_relatorios(); 
+       pausa();
+       break; 
+      case '4': 
+       avisos_da_semana(); 
+       pausa();
+       break; 
+      case '5': 
+       despesas(); 
+       pausa();
+       break;
+    }
+  } while (op != '0');
+  return 0; 
+}
+
+
+
+char tela_menu_principal (void){  
+  char op; 
+  system("clear||cls");
+  printf("\n# Universidade Federal do Rio Grande do Norte #"); 
+  printf("\n#   Centro de Ensino Superior do Seridó     #"); 
+  printf("\n#   Departamento de Computação e Tecnologia #"); 
+  printf("\n#       Disciplina DCT1106 -- Programação   #"); 
+  printf("\n#    Projeto Sistema de gestão de despesas  #"); 
+  printf("\n#           em uma República de Estudantes  #"); 
+  printf("\n#             Developed by @josephdouglas   #"); 
+  printf("\n#             since agost,2023              #"); 
+  printf("\n#    -- Sistema de gestão de despesas --    #"); 
+  printf("\n#                                           #");
+  printf("\n#           1. Aluno                        #"); 
+  printf("\n#           2. Sobre o programa             #"); 
+  printf("\n#           3. Relatórios                   #"); 
+  printf("\n#           4. Avisos da Semana             #"); 
+  printf("\n#           5. Despesas                     #");
+  printf("\n Qual sua opção?:");   
+  scanf("%s", &op); 
+  getchar();
+  return op;
+} 
+
+
+
+char moduloAluno1(void) {
+    char opcao;
+    do {
+        opcao = aluno();
+        switch(opcao) { 
+            case '1': 	cadastrar_aluno();  
+                        break;
+            case '2': 	tela_pesquisar_aluno();   
+                        break;
+            case '3': 	tela_Alterar_Aluno(); 
+                        
+                        break;
+            case '4': 	tela_Excluir_Aluno(); 
+                        break;
+        } 		
+    } while (opcao != '4'); 
+    return 0;
+}
+
+
+//feito com a ajuda do Chat GPT
+char aluno(void){ 
+  char op;  
+    system("clear||cls");
+    printf("\n#   --  Área do aluno --     #"); 
+    printf("\n# 1.Cadastrar aluno          #"); 
+    printf("\n# 2.Pesquisar aluno          #");  
+    printf("\n# 3.Alterar aluno            #"); 
+    printf("\n# 4.Excluir aluno            #");
+    printf("\nQual sua opção?:"); 
+    scanf("%c", &op);  
+    getchar();   
+    return op;
+}
+
+
+
+
+//Feito com base no exemplo de aluno.c do github do professor Flavios Gorgonio
+char cadastrar_aluno(void){   
+  struct Aluno* novo_aluno = malloc(sizeof(struct Aluno));
+  if(novo_aluno == NULL) {
+    printf("Erro ao alocar memória.\n");
+    return 1;
+  }
+  system("clear||cls");
+  printf("\n#    - - -   Cadastrar aluno  - - - #");
+  printf("\n# Nome completo:");
+  scanf("%[A-ZÁÉÍÓÚÂÊÔÇÀÃÕ a-záéíóúâêôçàãõ]", novo_aluno->nome);
+  printf("\n# Data de Nascimento (dd/mm/aaaa):");
+  scanf(" %[0-9/]", novo_aluno->data_nascimento);
+  printf("# Celular(apenas números):"); 
+  scanf(" %[0-9]", novo_aluno->celular); 
+  getchar();   
+  sleep(1);    
+  free(novo_aluno); 
+  return 0;
+}
+
+//Feito com base no exemplo de aluno.c do github do professor Flavios Gorgonio
+char tela_pesquisar_aluno(void) { 
+  char nome[51];
+  system("clear||cls");
+  printf("\n#  - - - - Pesquisar aluno - - - - #");                                          
+  printf("\n# Informe o nome para buscar(apenas letras): ");
+  scanf("%[A-ZÁÉÍÓÚÂÊÔÇÀÃÕ a-záéíóúâêôçàãõ]", nome); 
+  getchar();  
+  sleep(1);
+  return 0;
+}
+
+
+
+//Feito com base no exemplo de aluno.c do github do professor Flavios Gorgonio
+char tela_Alterar_Aluno(void){
+  char nome[51];
+
+  system("clear||cls");
+  printf("\n");
+  printf("\n#  - - - - Alterar aluno - - - - #");
+  printf("\n# Informe o nome (apenas letras): ");
+  scanf("%[A-ZÁÉÍÓÚÂÊÔÇÀÃÕ a-záéíóúâêôçàãõ]",nome);
+  getchar();  
+  sleep(1);
+  return 0;
+} 
+
+
+
+//Feito com base no exemplo de aluno.c do github do professor Flavios Gorgonio
+char tela_Excluir_Aluno(void) {
+  char nome[51];
+  system("clear||cls");
+  printf("\n#  - - - - Excluir aluno - - - -  #");
+  printf("\n# Informe o nome (apenas letras): ");
+  scanf("%[A-ZÁÉÍÓÚÂÊÔÇÀÃÕ a-záéíóúâêôçàãõ]",nome); 
+  getchar(); 
+  sleep(1);
+  return aluno();
+}
+
+
+
+void tela_sobre(void){  
+ system("clear||cls");
+ printf("\n#Universidade Federal do Rio Grande do Norte #"); 
+ printf("\n#Centro de Ensino Superior do Seridó         #"); 
+ printf("\n#Departamento de Computação e Tecnologia     #"); 
+ printf("\n#Disciplina DCT1106 -- Programação           #"); 
+ printf("\n#Projeto Sistema de gestão de despesas       #"); 
+ printf("\n#em uma República de Estudantes              #"); 
+ printf("\n#Developed by @josephdouglas                 #"); 
+ printf("\n# since agost,2023                           #"); 
+ printf("\n##############################################"); 
+ printf("\n#                                            #"); 
+ printf("\n# -- Sistema de gestão de despesas --        #"); 
+ printf("\n#Programa para fazer gestão de despesas em república de estudantes,para fins de agilizamento do trabalho e melhoramento do atendimento para os estudantes da Universidade.#"); 
+ printf("\n# Universidade Federal do Rio Grande do Norte#"); 
+ printf("\n#Centro de Ensino Superior do Seridó         #"); 
+ printf("\n#Departamento de Computação e Tecnologia     #"); 
+ printf("\n#Disciplina DCT1106 -- Programação           #"); 
+ printf("\n#Projeto Sistema de gestão de despesas       #"); 
+ printf("\n#em uma República de Estudantes              #"); 
+ printf("\n#Developed by @josephdouglas                 #"); 
+ printf("\n#since agost,2023                            #");  
+ getchar(); 
+}
+
+
+
+void tela_equipe(void) {
+ system("clear||cls");
+ printf("\n###########################################");  
+ printf("\n# -- Sistema de gestão de despesas --     #"); 
+ printf("\n#                                         #"); 
+ printf("\n#Este programa foi desenvolvido por:      #"); 
+ printf("\n#Joseph Douglas Moura Batista             #");  
+ printf("\n#E-mail:joseph.batista.066@ufrn.edu.br    #"); 
+ printf("\n#Redes sociais: @josephdouglas            #"); 
+ printf("\n#Git:https://github.com/JosephDouglas7/README.md.git  #"); 
+ printf("\n#                                          #");    
+ printf("\n############################################"); 
+}
+
+
+
+//feito com a ajuda do Chat GPT
+char tela_relatorios(void){  
+ char op;
+ do{
+ system("clear||cls");
+ printf("\n#### relatórios ####"); 
+ printf("\n1.Adicionar relatórios");  
+ printf("\n2.Voltar ao menu anterior");
+ printf("\nQual sua opção?:");  
+ scanf("%s", &op);  
+ getchar();  
+ switch(op) {
+      case '1':
+        tela_relatorios2();
+        pausa();
+        break;
+      case '2':
+        tela_menu_principal();
+        pausa();
+        break;
+      default:
+        printf("\nOpção inválida!\n");
+    }
+  } while(op != '0'); 
+
+     return op;
+}  
+
+
+
+char tela_relatorios2(void){ 
+  char op;  
+  do{
+  system("clear||cls");
+  printf("\n#### Relatório ####"); 
+  printf("\n1.A república estudantil está em ordem"); 
+  printf("\n2.A república estudantil está precisando de reformas"); 
+  printf("\n3.A república estudantil está fora de ordem"); 
+  printf("\n4.relatórios atualizados"); 
+  printf("\n0.Voltar ao menu principal");
+  printf("\nQual sua opção?:"); 
+  scanf("%s", &op);   
+  getchar();    
+  switch(op) {
+      case '0':
+        tela_menu_principal();
+        pausa();
+        break;
+      case '1':
+        resp_relat2();
+        pausa();
+        break;
+      case '2':
+        resp_relat3();
+        pausa();
+        break; 
+    case '3': 
+      resp_relat4();
+      pausa(); 
+      break; 
+    case '4': 
+       relatorio_atualizado(); 
+       pause(); 
+       break;
+      default:
+        printf("\nOpção inválida!\n");
+    }
+  } while(op != '3'); 
+
+    return op;
+} 
+
+
+
+char resp_relat2(void){ 
+  char op;
+  printf("\nA república estudantil está em ordem"); 
+  printf("\n0.Voltar ao menu principal");
+  printf("\nQual sua opção?:"); 
+  scanf("%s", &op); 
+  printf("\n#   FIM   #");   
+  getchar();  
+  switch(op) {
+    case '0':
+      tela_menu_principal();
+      pausa();
+      break; 
+    default: 
+      printf("\nOpção inválida!\n");
+        }
+  return 0; 
+}
+
+char resp_relat3(void){  
+  char op;
+  printf("\nA república estudantil está precisando de reformas");  
+  printf("\nQual sua opção?:"); 
+  scanf("%s", &op); 
+  printf("\n#   FIM   #");  
+  getchar();  
+  switch(op) {
+    case '0':
+      tela_menu_principal();
+      pausa();
+      break; 
+    default: 
+      printf("\nOpção inválida!\n");
+        }
+  return 0; 
+} 
+
+char resp_relat4(void){  
+  char op;
+  printf("\nA república estudantil está fora de ordem");  
+  printf("\nQual sua opção?:"); 
+  scanf("%s", &op);
+  printf("\n#   FIM   #"); 
+  getchar();  
+  switch(op) {
+    case '0':
+      tela_menu_principal();
+      pausa();
+      break; 
+    default: 
+      printf("\nOpção inválida!\n");
+ }
+  return 0; 
+}
+
+
+
+//Feito com a ajuda do chat bing 
+char relatorio_atualizado(void){ 
+  char op; 
+   do { 
+      system("clear||cls");
+      printf("\n----- Relatorios atualizados -----");   
+      printf("\n0.Voltar ao menu principal");
+      printf("\n1.Exibir o resultado do relatório 2");
+      printf("\nQual sua opção?:"); 
+      scanf("%s", &op);  
+      getchar();  
+      switch(op) {
+        case '0':
+          tela_menu_principal();
+          pausa();
+          break; 
+        case '1':
+          exibir_resultado_relatorio2();
+          pausa();
+          break;
+        default:
+          printf("\nOpção inválida!\n");
+      }
+    } while(op!= '3' && '4'); 
+
+    return op;
+} 
+
+
+
+//Feito com ajuda do ChatGPT
+char exibir_resultado_relatorio2(void){ 
+ char op; 
+ system("clear||cls");
+ printf("%c", tela_relatorios2()); // Chama a função aqui  
+ getchar();  
+ return op;
+}
+
+
+
+char avisos_da_semana(void){  
+  char op;  
+  do{
+  system("clear||cls");
+  printf("\n### Avisos da Semana ###"); 
+  printf("\nFaxina as sextas"); 
+  printf("\nVarrer aos sábados");  
+  printf("\n1.Voltar ao menu principal");
+  printf("\n Qual sua opção?:");  
+  scanf("%s", &op);  
+  getchar(); 
+
+  switch(op) {
+      case '1':
+        tela_menu_principal();
+        pausa();
+        break;
+
+      default:
+        printf("\nOpção inválida!\n");
+    }
+  } while(0 != '3'); 
+
+    return 0;
+ } 
+
+
+
+char despesas(void){ 
+ char op;  
+ do{
+ system("clear||cls");
+ printf("\n# Universidade Federal do Rio Grande do Norte #"); 
+ printf("\n#   Centro de Ensino Superior do Seridó     #"); 
+ printf("\n#   Departamento de Computação e Tecnologia #"); 
+ printf("\n#       Disciplina DCT1106 -- Programação   #"); 
+ printf("\n#    Projeto Sistema de gestão de despesas  #"); 
+ printf("\n#           em uma República de Estudantes  #"); 
+ printf("\n#             Developed by @josephdouglas   #"); 
+ printf("\n#             since agost,2023              #"); 
+ printf("\n#      ----     Despesas       ----         #"); 
+ printf("\n#                                           #");
+ printf("\n#           1. Saldo atual                  #"); 
+ printf("\n#           2. Adicionar pagamento          #"); 
+ printf("\n#           3. Pagamentos atuais            #"); 
+ printf("\n#           4. Voltar ao menu principal     #"); 
+ printf("\n#                                           #"); 
+ printf("\n Qual sua opção?:");  
+ scanf("%s", &op);  
+ getchar(); 
+
+ switch(op) {
+      case '1':
+        saldo_atual();
+        pausa();
+        break;
+      case '2':
+        adicionar_pagamento();
+        pausa();
+        break; 
+    case '3': 
+      pagamentos_atuais();
+      pausa(); 
+      break; 
+    case '4': 
+      tela_menu_principal();
+      pausa(); 
+      break;
+      default:
+        printf("\nOpção inválida!\n");
+    }
+  } while(op != '3'); 
+
+    return 0;
+} 
+
+
+
+//Feito com a ajuda do ChatGPT
+char saldo_atual (void){   
+  do{
+  char op; 
+  system("clear||cls");
+  printf("\nSaldo atual: R$ 7000");  
+  printf("\n1.voltar ao menu principal"); 
+  printf("\nQual sua opcao?:");
+  scanf("%s",&op);
+  getchar();  
+
+  switch(op){ 
+    case '1': 
+    despesas(); 
+    pause(); 
+    break; 
+  default: 
+    printf("\nOpção inválida!\n");
+    }
+  } while(0 != '1'); 
+
+    return 0;
+} 
+
+
+
+//Feito com ajuda do ChatGPT
+char adicionar_pagamento(void){  
+  char op; 
+  float valor;
+  do{
+    system("clear||cls");
+    printf("\n ---- pagamento ----"); 
+    printf("\nDigite um valor:"); 
+    scanf("%f", &valor);
+    getchar(); // Consume newline character after float input
+    printf("\nValor adicionado com sucesso!");
+    printf("\n1.Voltar ao menu principal"); 
+    printf("\n2.Ir para pagamentos_atuais");
+    printf("\nQual sua opcao?:"); 
+    scanf("%s",&op);
+    getchar(); // Consume newline character after char input
+
+    switch(op){ 
+      case '1': 
+       despesas(); 
+       pause(); 
+       break;  
+      case '2': 
+       pagamentos_atuais(); 
+       pause(); 
+       break;
+      default: 
+        printf("\nOpção inválida!\n");
+      }
+    } while(op != '1'); 
+
+  return 0;
+}
+
+
+
+char pagamentos_atuais(void){   
+int total_pagamentos = 0;
+Pagamento* pagamentos = malloc(total_pagamentos * sizeof(Pagamento));  // Alocar memória para 'pagamentos'
+char op; 
+#define MAX_PAGAMENTOS 100 
+
+do {
+    system("clear||cls");
+    printf("\n ---- Contas pagas ----"); 
+    for(int i = 0; i < total_pagamentos; i++) {
+      printf("\n%s - Pagamento de R$ %.2f", pagamentos[i].data_pagamento, pagamentos[i].valor);
+    }
+
+    printf("\n1.Voltar ao menu principal");
+    printf("\nQual sua opção?: "); 
+    scanf ("%c", &op);   // Corrigido o especificador de formato
+    getchar(); 
+
+    switch(op) { 
+        case '1': 
+            despesas(); 
+            pausa();  // Corrigido o nome da função
+            break;
+        default:
+            printf("\nOpção inválida!\n");
+    }
+} while(op != '1');
+
+// Guardar na memória
+FILE *fp = fopen("pagamentos.txt", "w");
+if(fp == NULL) {
+    printf("Erro ao abrir o arquivo.\n");
+    return 1;
+}
+for(int i = 0; i < total_pagamentos; i++) {
+    fprintf(fp, "%s - Pagamento de R$ %.2f\n", pagamentos[i].data_pagamento, pagamentos[i].valor);
+}
+fclose(fp);
+
+free(pagamentos);  // Liberar a memória alocada para 'pagamentos'
+
+return op; 
+}
